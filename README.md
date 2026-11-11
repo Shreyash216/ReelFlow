@@ -83,9 +83,27 @@ Please include your Firefox version, operating system and steps to reproduce any
 
 ## License
 
-License information will be added before the public release.
+ReelFlow is licensed under the **Mozilla Public License 2.0 (MPL-2.0)**.
 
+You are free to use, modify and distribute the project in accordance with the licence terms.
+
+See the [LICENSE](LICENSE) file for the complete licence text.
+
+## Distribution
+
+ReelFlow is intended to be distributed through:
+
+- [Mozilla Add-ons](https://addons.mozilla.org/) — official installation and automatic extension updates.
+- [GitHub Releases](https://github.com/Shreyash216/ReelFlow/releases) — release notes, source code and downloadable release assets.
+
+ReelFlow currently supports Mozilla Firefox desktop only.
 ---
 
 **ReelFlow**  
 Built to make Instagram listening more convenient.
+
+## Screenshots
+
+### Extension Popup
+
+![ReelFlow extension popup](screenshots/reelflow-popup.png)

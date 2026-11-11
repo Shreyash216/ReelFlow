@@ -48,6 +48,7 @@ The extension uses separate isolated and page-level scripts to communicate setti
 
 It does not automatically scroll Reels or call `video.play()` to force playback.
 
+
 ## Privacy
 
 ReelFlow is designed to operate locally in the browser.
@@ -55,9 +56,9 @@ ReelFlow is designed to operate locally in the browser.
 - No Instagram login credentials are collected.
 - No external analytics services are integrated.
 - No external application server is required.
-- Playback preferences are stored using Firefox's local extension storage.
+- Playback preferences and diagnostic information are stored using Firefox's local extension storage.
 
-See the project's privacy policy for further details.
+Read our [Privacy Policy](PRIVACY.md) for complete details about data access, storage, permissions and privacy practices.
 
 ## Development
 

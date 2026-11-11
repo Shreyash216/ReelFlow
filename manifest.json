@@ -2,21 +2,37 @@
 {
   "manifest_version": 3,
   "name": "ReelFlow",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Keep Instagram Reels playing in the background.",
+
   "browser_specific_settings": {
     "gecko": {
       "id": "reelflow@shreyash.dev",
       "strict_min_version": "128.0"
     }
   },
+
   "permissions": [
     "storage"
   ],
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+
   "action": {
     "default_title": "ReelFlow",
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
   },
+
   "content_scripts": [
     {
       "matches": ["*://*.instagram.com/*"],

@@ -4,47 +4,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <title>ReelFlow</title>
     <link rel="stylesheet" href="popup.css">
     <script src="popup.js" defer></script>
 </head>
+
 <body>
     <main class="container">
+
         <header class="header">
             <div class="brand">
-                <div class="logo">R</div>
-                <div>
+                <div class="logo" aria-hidden="true">R</div>
+
+                <div class="brand-text">
                     <h1>ReelFlow</h1>
-                    <p>Instagram Background Playback</p>
+                    <p>BACKGROUND PLAYBACK</p>
                 </div>
             </div>
-            <span class="version">v0.2.0</span>
+
+            <span class="version">v0.3.0</span>
         </header>
 
-        <section class="status-card">
-            <div class="status-indicator" id="statusDot"></div>
+        <section class="status-card"
+                 aria-label="Extension status">
+
+            <span id="statusDot"
+                  class="status-indicator"
+                  aria-hidden="true"></span>
+
+            <div class="status-content">
+                <strong id="statusText"
+                        role="status"
+                        aria-live="polite">
+                    Checking status...
+                </strong>
+
+                <p id="statusDescription">
+                    Loading preferences
+                </p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <h2>Playback</h2>
+                <span class="section-label">CORE CONTROL</span>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-info">
+                    <label for="enabledToggle">
+                        Background playback
+                    </label>
+
+                    <p>
+                        Continue listening when switching tabs
+                    </p>
+                </div>
+
+                <label class="switch">
+                    <input
+                        type="checkbox"
+                        id="enabledToggle"
+                        aria-label="Enable background playback"
+                        disabled
+                    >
+                    <span class="slider" aria-hidden="true"></span>
+                </label>
+            </div>
+        </section>
+
+        <section class="panel settings-panel">
+            <div class="section-heading">
+                <h2>Preferences</h2>
+                <span class="section-label">BEHAVIOUR</span>
+            </div>
+
+            <div class="info-row">
+                <div class="setting-info">
+                    <h3>Manual pause protection</h3>
+                    <p>Never force a paused Reel to resume</p>
+                </div>
+                <span class="preference-status">Always on</span>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="info-row">
+                <div class="setting-info">
+                    <h3>Multiple-tab playback</h3>
+                    <p>Allow simultaneous background audio</p>
+                </div>
+                <span class="preference-status">Allowed</span>
+            </div>
+        </section>
+
+        <div id="errorMessage"
+             class="error-message"
+             role="alert"
+             aria-live="assertive"
+             hidden>
+        </div>
+
+        <footer class="footer">
             <div>
-                <strong id="statusText">Checking status...</strong>
-                <p id="statusDescription">Loading your preferences</p>
-            </div>
-        </section>
-
-        <section class="setting">
-            <div class="setting-info">
-                <h2>Background Playback</h2>
-                <p>Keep Reels playing when you switch tabs.</p>
+                <strong>ReelFlow</strong>
+                <span>Made for uninterrupted listening.</span>
             </div>
 
-            <label class="switch">
-                <input type="checkbox" id="enabledToggle">
-                <span class="slider"></span>
-            </label>
-        </section>
-
-        <footer>
-            <span>Made for uninterrupted listening.</span>
-            <span>ReelFlow © 2026</span>
+            <button
+                id="aboutButton"
+                class="about-button"
+                type="button"
+                aria-expanded="false"
+                aria-controls="aboutContent">
+                About
+            </button>
         </footer>
+
+        <section id="aboutContent"
+                 class="about-content"
+                 hidden>
+            <h2>About ReelFlow</h2>
+
+            <p>
+                ReelFlow is a lightweight Firefox extension
+                that helps Instagram Reels continue playing
+                when you switch tabs or minimize Firefox.
+            </p>
+
+            <p class="privacy-note">
+                No account credentials, tracking or
+                external analytics.
+            </p>
+
+            <span>Version 0.3.0</span>
+        </section>
+
     </main>
 </body>
 </html>

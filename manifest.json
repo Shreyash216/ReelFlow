@@ -2,7 +2,7 @@
 {
   "manifest_version": 3,
   "name": "ReelFlow",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Keep Instagram Reels playing in the background.",
   "browser_specific_settings": {
     "gecko": {

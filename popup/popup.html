@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReelFlow</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="popup.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <div class="brand">
+                <div class="logo">R</div>
+                <div>
+                    <h1>ReelFlow</h1>
+                    <p>Instagram Background Playback</p>
+                </div>
+            </div>
+            <span class="version">v0.2.0</span>
+        </header>
+
+        <section class="status-card">
+            <div class="status-indicator" id="statusDot"></div>
+            <div>
+                <strong id="statusText">Checking status...</strong>
+                <p id="statusDescription">Loading your preferences</p>
+            </div>
+        </section>
+
+        <section class="setting">
+            <div class="setting-info">
+                <h2>Background Playback</h2>
+                <p>Keep Reels playing when you switch tabs.</p>
+            </div>
+
+            <label class="switch">
+                <input type="checkbox" id="enabledToggle">
+                <span class="slider"></span>
+            </label>
+        </section>
+
+        <footer>
+            <span>Made for uninterrupted listening.</span>
+            <span>ReelFlow © 2026</span>
+        </footer>
+    </main>
+</body>
+</html>

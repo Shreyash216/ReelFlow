@@ -9,7 +9,7 @@
     const TARGET = "reelflow-extension";
 
     let enabled = false;
-    let listenerAttached = false;
+    let initialized = false;
 
     const originalVisibility = Object.getOwnPropertyDescriptor(
         Document.prototype,
@@ -21,8 +21,40 @@
         "hidden"
     );
 
+    // Preserve any existing own properties for safe restoration.
+    const previousVisibility = Object.getOwnPropertyDescriptor(
+        document,
+        "visibilityState"
+    );
+
+    const previousHidden = Object.getOwnPropertyDescriptor(
+        document,
+        "hidden"
+    );
+
+    function sendMessage(type, extra = {}) {
+        window.postMessage({
+            source: SOURCE,
+            type,
+            ...extra
+        }, location.origin);
+    }
+
+    function reportError(message) {
+        console.error(`[ReelFlow] ${message}`);
+
+        sendMessage("ERROR", { message });
+    }
+
+    function reportStatus() {
+        sendMessage("STATUS", {
+            status: enabled ? "enabled" : "disabled",
+            initialized
+        });
+    }
+
     if (!originalVisibility?.get || !originalHidden?.get) {
-        console.warn("[ReelFlow] Visibility API unavailable.");
+        reportError("Visibility API unavailable.");
         return;
     }
 
@@ -34,16 +66,20 @@
         }
     }
 
+    function restoreProperty(property, previousDescriptor) {
+        if (previousDescriptor) {
+            Object.defineProperty(
+                document,
+                property,
+                previousDescriptor
+            );
+        } else {
+            delete document[property];
+        }
+    }
+
     function enableProtection() {
-        if (enabled) return;
-
-        enabled = true;
-
-        window.addEventListener(
-            "visibilitychange",
-            handleVisibilityChange,
-            true
-        );
+        if (enabled) return true;
 
         try {
             Object.defineProperty(document, "visibilityState", {
@@ -56,9 +92,36 @@
                 get: () => false
             });
 
+            window.addEventListener(
+                "visibilitychange",
+                handleVisibilityChange,
+                true
+            );
+
+            enabled = true;
+
             console.log("[ReelFlow] Background playback enabled.");
+
+            return true;
+
         } catch (error) {
-            enabled = false;
+            // Roll back both properties if activation partially fails.
+            try {
+                restoreProperty(
+                    "visibilityState",
+                    previousVisibility
+                );
+
+                restoreProperty(
+                    "hidden",
+                    previousHidden
+                );
+            } catch (restoreError) {
+                console.error(
+                    "[ReelFlow] Visibility restoration failed:",
+                    restoreError
+                );
+            }
 
             window.removeEventListener(
                 "visibilitychange",
@@ -66,12 +129,16 @@
                 true
             );
 
-            console.error("[ReelFlow] Enable failed:", error);
+            enabled = false;
+
+            reportError(`Could not enable protection: ${error.message}`);
+
+            return false;
         }
     }
 
     function disableProtection() {
-        if (!enabled) return;
+        if (!enabled) return true;
 
         enabled = false;
 
@@ -81,11 +148,46 @@
             true
         );
 
-        // Restore the original document behaviour.
-        delete document.visibilityState;
-        delete document.hidden;
+        try {
+            restoreProperty(
+                "visibilityState",
+                previousVisibility
+            );
 
-        console.log("[ReelFlow] Background playback disabled.");
+            restoreProperty(
+                "hidden",
+                previousHidden
+            );
+
+            console.log("[ReelFlow] Background playback disabled.");
+
+            return true;
+
+        } catch (error) {
+            reportError(`Could not restore visibility: ${error.message}`);
+
+            return false;
+        }
+    }
+
+    function handleSettings(data) {
+        if (typeof data.enabled !== "boolean") {
+            reportError("Invalid playback setting received.");
+            return;
+        }
+
+        const success = data.enabled
+            ? enableProtection()
+            : disableProtection();
+
+        if (!success) return;
+
+        sendMessage("ACK", {
+            requestId: data.requestId,
+            enabled
+        });
+
+        reportStatus();
     }
 
     window.addEventListener("message", (event) => {
@@ -95,33 +197,21 @@
 
         if (!data || data.source !== TARGET) return;
 
+        if (data.type === "HELLO") {
+            sendMessage("READY");
+            return;
+        }
+
         if (data.type === "SETTINGS") {
-            if (data.enabled === true) {
-                enableProtection();
-            } else if (data.enabled === false) {
-                disableProtection();
-            }
+            handleSettings(data);
         }
     });
 
-    // Respond to the isolated extension script.
-    window.addEventListener("message", (event) => {
-        if (event.source !== window) return;
+    initialized = true;
 
-        if (
-            event.data?.source === SOURCE &&
-            event.data?.type === "HELLO"
-        ) {
-            window.postMessage({
-                source: SOURCE,
-                type: "READY"
-            }, location.origin);
-        }
-    });
+    console.log("[ReelFlow] Playback engine initialized.");
 
-    window.postMessage({
-        source: SOURCE,
-        type: "READY"
-    }, location.origin);
+    // Initial readiness notification.
+    sendMessage("READY");
 
 })();

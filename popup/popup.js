@@ -131,5 +131,15 @@ aboutButton.addEventListener("click", () => {
 
     aboutContent.hidden = isExpanded;
 });
+browser.storage.onChanged.addListener((changes, area) => {
+    if (area !== "local" || !changes.lastError) return;
 
+    const error = changes.lastError.newValue;
+
+    if (error?.message) {
+        showError(error.message);
+    } else {
+        clearError();
+    }
+});
 initialize();
